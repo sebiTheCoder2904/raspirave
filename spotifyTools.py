@@ -1,0 +1,131 @@
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
+scope = (
+        "user-library-read ",
+        "user-read-playback-state ",
+        "user-modify-playback-state ",
+        "user-read-currently-playing ",
+        "app-remote-control ",
+        "streaming ",
+        "playlist-read-private ",
+        "playlist-read-collaborative ",
+        "playlist-modify-private ",
+        "playlist-modify-public ",
+        "user-read-playback-position ",
+        "user-top-read ",
+        "user-read-recently-played "
+        )
+
+class SpotifyTool:
+
+    def __init__(self):
+        self.scope = scope
+        self.auth_manager = SpotifyOAuth(scope=self.scope, open_browser=False)
+        self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
+
+
+    def get_current_playback(self):
+        return self.sp.current_playback()
+    
+    def get_pretty_current_playback(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            return "No playback information available."
+        
+        item = playback.get('item', {})
+        if not item:
+            return "No track is currently playing."
+        
+        artists = ', '.join(artist['name'] for artist in item.get('artists', []))
+        track_name = item.get('name', 'Unknown Track')
+        is_playing = playback.get('is_playing', False)
+        progress_ms = playback.get('progress_ms', 0)
+        duration_ms = item.get('duration_ms', 0)
+
+        progress_min, progress_sec = divmod(progress_ms // 1000, 60)
+        duration_min, duration_sec = divmod(duration_ms // 1000, 60)
+
+        status = "Playing" if is_playing else "Paused"
+        
+        return (f"{status}: '{track_name}' by {artists} "
+                f"[{progress_min}:{progress_sec:02d} / {duration_min}:{duration_sec:02d}]")
+
+    def get_current_playback_trackname(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            return None
+        
+        item = playback.get('item', {})
+        if not item:
+            return None
+        
+        return item.get('name', None)
+
+    def get_current_playback_artistname(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            return None
+        
+        item = playback.get('item', {})
+        if not item:
+            return None
+        
+        artists = item.get('artists', [])
+        if not artists:
+            return None
+        
+        return artists[0].get('name', None)
+
+    def give_scope(self):
+        return self.scope
+
+    def next_track(self):
+        self.sp.next_track()
+
+    def previous_track(self):
+        self.sp.previous_track()
+    
+    def toggle_playback(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            print("No playback information available.")
+            return
+        
+        is_playing = playback.get('is_playing', False)
+        if is_playing:
+            self.sp.pause_playback()
+        else:
+            self.sp.start_playback()
+
+    def set_volume(self, volume_percent):
+        if 0 <= volume_percent <= 100:
+            self.sp.volume(volume_percent)
+        else:
+            print("Volume percent must be between 0 and 100.")
+
+    def get_current_track_duration(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            return 0
+        
+        item = playback.get('item', {})
+        if not item:
+            return 0
+        
+        return item.get('duration_ms', 0)
+
+    def get_current_track_progress(self):
+        playback = self.get_current_playback()
+        if playback is None:
+            return 0
+        
+        return playback.get('progress_ms', 0)
+
+
+    def printEnvVars(self):
+        import os
+        client_id = os.getenv("SPOTIPY_CLIENT_ID")
+        client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
+        print(f"Client ID: {client_id}")
+        print(f"Client Secret: {client_secret}")
