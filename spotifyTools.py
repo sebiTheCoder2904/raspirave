@@ -1,5 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+import zmq
+from time import sleep
 
 scope = (
         "user-library-read ",
@@ -20,6 +22,13 @@ scope = (
 class SpotifyTool:
 
     def __init__(self):
+        self.socket = "ipc:///tmp/bus"
+        self.topic_kill = "spotipy/kill"
+        self.topic_playback = "spotipy/playback/state"
+        self.topic_playback_update = "spotipy/playback/state/update"
+        self.topic_track = "spotipy/playback/track"
+        self.topic_artist = "spotipy/playback/artist"
+
         self.scope = scope
         self.auth_manager = SpotifyOAuth(scope=self.scope, open_browser=False)
         self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
@@ -129,3 +138,21 @@ class SpotifyTool:
         client_secret = os.getenv("SPOTIPY_CLIENT_SECRET")
         print(f"Client ID: {client_id}")
         print(f"Client Secret: {client_secret}")
+
+
+    def zmq_manager_thread(self):
+        from zmqTool import ZmqTool
+        zmq_tool = ZmqTool()
+
+        while True:
+
+            if zmq_tool.listen_message(self.topic_playback) == "update":
+                playback = self.get_pretty_current_playback()
+                zmq_tool.publish_message(self.topic_playback, playback)
+
+            
+
+            else:
+                pass
+
+
