@@ -4,7 +4,11 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Display:
     def __init__(self):
+        self.oled_width = 128
+        self.oled_height = 64
         self.img = Image.new('1', (128, 64), color=1)  # 1 for 1-bit pixels, black and white
+        self.font = ImageFont.truetype("assets/W95FA.otf", 14)
+        self.font_large = ImageFont.truetype("assets/W95FA.otf", 35)
 
     def update_display(self, new_image):
         # Update the display with a new image
@@ -21,7 +25,7 @@ class Display:
     def draw_TEST(self):    # make it return a image with TEST written on it
         img = Image.new('1', (128, 64), color=0)  # 1 for 1-bit pixels, black and white
         draw = ImageDraw.Draw(img)
-        draw.text((32, 24), "TEST", font=ImageFont.load_default(), fill=1)
+        draw.text((32, 24), "TEST", font=self.font_large, fill=1)
         return img
 
     def draw_current_time(self):
@@ -31,7 +35,16 @@ class Display:
         img = Image.new('1', (128, 64), color=0)  # 1 for 1-bit pixels, black and white
         draw = ImageDraw.Draw(img)
 
+        text_size = self.font_large.getbbox(time_string)
+        text_width = text_size[2] - text_size[0]
+        text_height = text_size[3] - text_size[1]
 
-        draw.text((10, 24), time_string, font=ImageFont.load_default(), fill=1)
+        text = draw.text((self.oled_width/2, self.oled_height/2), time_string, font=self.font_large, fill=1, anchor="mm")
         return img
+
+    def draw_topbar(self):
+        from topbar import TopBar
+        topbar = TopBar()
+        topbar_image = topbar.draw_topbar()
+        return topbar_image
         

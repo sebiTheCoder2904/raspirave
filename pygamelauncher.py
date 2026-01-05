@@ -3,7 +3,7 @@ from imageConstructor import ImageConstructor
 
 class PygameLauncher:
     def __init__(self):
-        self.scale_factor = 3
+        self.scale_factor = 4
         pygame.init()
         self.screen = pygame.display.set_mode((128*self.scale_factor, 64*self.scale_factor))
         pygame.display.set_caption("Pygame Display Emulator")
@@ -28,6 +28,10 @@ class PygameLauncher:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        running = False
 
             # Construct the test image using ImageConstructor
             image = self.image_constructor.construct_image()
