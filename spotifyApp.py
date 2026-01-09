@@ -26,8 +26,12 @@ class SpotifyApp:
         img = Image.new('1', (128, 64), color=0)  # 1 for 1-bit pixels, black and white
         draw = ImageDraw.Draw(img)
         self.update_info()
-        
-        drawlinecoordinate = round((int(self.progress_ms) / int(self.total_duration_ms)) * self.oled_width)
+
+        if int(self.total_duration_ms) == 0:
+            drawlinecoordinate = 0
+        else:
+            drawlinecoordinate = round((int(self.progress_ms) / int(self.total_duration_ms)) * self.oled_width)
+
         draw.line((0, self.oled_height-1, drawlinecoordinate, self.oled_height-1), fill=1, width=1)  # spotify playback progress bar
 
         draw.text((self.oled_width/2, self.oled_height/2), self.trackname, font=self.font_large, fill=1, anchor="mm")
