@@ -10,6 +10,12 @@ class Display:
         self.font = ImageFont.truetype("assets/W95FA.otf", 14)
         self.font_large = ImageFont.truetype("assets/W95FA.otf", 35)
 
+        from spotifyApp import SpotifyApp
+        self.spotify_app = SpotifyApp()
+
+        from topbar import TopBar
+        self.topbar = TopBar()
+
     def update_display(self, new_image):
         # Update the display with a new image
         self.img.paste(new_image)
@@ -43,8 +49,10 @@ class Display:
         return img
 
     def draw_topbar(self):
-        from topbar import TopBar
-        topbar = TopBar()
-        topbar_image = topbar.draw_topbar()
+        topbar_image = self.topbar.draw_topbar()
         return topbar_image
+
+    def draw_spotifyApp(self):
+        spotify_image = self.spotify_app.draw_spotifyApp()
+        return spotify_image
         

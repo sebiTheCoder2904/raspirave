@@ -1,9 +1,22 @@
 import zmq
 from time import sleep
 import json
+from spotifyTools import SpotifyTool
+
+spotipyTopics = SpotifyTool().topic2function.keys()
+appTopics = {
+    "/app/current": "draw_spotifyApp",
+    "/app/showTopbar": "true",
+
+    }  
 
 class ZmqTool:
     def __init__(self):
+        self.last = {k: "none" for k in spotipyTopics}
+        self.last.update(appTopics)
+
+
+
         self.address = "ipc:///tmp/bus"
         self.ctx = zmq.Context()
         self.sock = self.ctx.socket(zmq.REQ)
@@ -29,16 +42,14 @@ class ZmqTool:
         rep = context.socket(zmq.REP)
         rep.bind(self.address)
 
-        last = {}
-
         while True:
             topic, message = rep.recv_string().split(' ', 1)
             if message == "get":
-                value = last.get(topic)
+                value = self.last.get(topic)
                 rep.send_string(value if value is not None else "")
             elif message == "getDict":
-                rep.send_string(json.dumps(last))
+                rep.send_string(json.dumps(self.last))
             else:
-                last[topic] = message
+                self.last[topic] = message
                 rep.send_string("ok")
 

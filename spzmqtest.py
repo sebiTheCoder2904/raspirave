@@ -12,14 +12,18 @@ st = SpotifyTool()
 stTread = threading.Thread(target=st.zmq_manager_thread, daemon=True)
 stTread.start()
 
-sleep(0.1)  # Allow time for thread to start
 
 from zmqTool import ZmqTool
 zt = ZmqTool()
 
-zt.publish_message(st.topic_playback, "update")
-while zt.listen_message(st.topic_playback) == "update":
-    pass
+while True:
+    zt.publish_message("/spotipy/playback/trackname", "update")
+    zt.publish_message("/spotipy/playback/progress", "update")
+    zt.publish_message("/spotipy/playback/total_duration", "update")
+    while zt.listen_message("/spotipy/playback/trackname") == "update":
+        pass
+    
+    print(zt.listen_message("/spotipy/playback/trackname"))
 
-print(zt.listen_message(st.topic_playback))
+    sleep(2)
 

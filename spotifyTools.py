@@ -19,6 +19,20 @@ scope = (
         "user-read-recently-played "
         )
 
+topic2function = {
+    "/spotipy/playback/next": "next_track",
+    "/spotipy/playback/previous": "previous_track",
+    "/spotipy/playback/toggle": "toggle_playback",
+    "/spotipy/playback/current": "get_current_playback",
+    "/spotipy/playback/current_pretty": "get_pretty_current_playback",
+    "/spotipy/playback/trackname": "get_current_playback_trackname",
+    "/spotipy/playback/artistname": "get_current_playback_artistname",
+    "/spotipy/scope/get": "give_scope",
+    "/spotipy/volume/set": "set_volume",
+    "/spotipy/playback/total_duration": "get_current_track_duration",
+    "/spotipy/playback/progress": "get_current_track_progress",
+    }
+
 class SpotifyTool:
 
     def __init__(self):
@@ -30,6 +44,7 @@ class SpotifyTool:
         self.topic_artist = "spotipy/playback/artist"
 
         self.scope = scope
+        self.topic2function = topic2function
         self.auth_manager = SpotifyOAuth(scope=self.scope, open_browser=False)
         self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
 
@@ -56,7 +71,7 @@ class SpotifyTool:
         duration_min, duration_sec = divmod(duration_ms // 1000, 60)
 
         status = "Playing" if is_playing else "Paused"
-        
+
         return (f"{status}: '{track_name}' by {artists} "
                 f"[{progress_min}:{progress_sec:02d} / {duration_min}:{duration_sec:02d}]")
 
@@ -144,15 +159,17 @@ class SpotifyTool:
         from zmqTool import ZmqTool
         zmq_tool = ZmqTool()
 
+        # while True:
+        #     if zmq_tool.listen_message(self.topic_playback) == "update":
+        #         playback = self.get_pretty_current_playback()
+        #         zmq_tool.publish_message(self.topic_playback, playback)
         while True:
-
-            if zmq_tool.listen_message(self.topic_playback) == "update":
-                playback = self.get_pretty_current_playback()
-                zmq_tool.publish_message(self.topic_playback, playback)
+            for topic, function_name in topic2function.items():
+                if zmq_tool.listen_message(topic) == "update":
+                    function = getattr(self, function_name, None)
+                    if function:
+                        result = function()
+                        zmq_tool.publish_message(topic, str(result))
 
             
-
-            else:
-                pass
-
 

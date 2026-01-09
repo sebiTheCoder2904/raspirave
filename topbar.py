@@ -16,6 +16,13 @@ class TopBar:
         img = Image.new('1', (128, 64), color=0)  # 1 for 1-bit pixels, black and white
         draw = ImageDraw.Draw(img)
 
+        self.update()
+
         draw.rounded_rectangle(xy=[0, -20, 127, 12], fill=0, width=1, radius=7, outline="white")
+        draw.text((self.oled_width-2, 0), f"{self.voltage}V", font=self.font, fill=1, anchor="rt")
+        draw.text((2, 0), self.time_string, font=self.font, fill=1, anchor="lt")
 
         return img
+
+    def update(self):
+        self.time_string = self.os_tool.get_current_time_string()
