@@ -1,5 +1,6 @@
 import pygame
 from imageConstructor import ImageConstructor
+from time import sleep
 
 class PygameLauncher:
     def __init__(self):
@@ -45,7 +46,6 @@ class PygameLauncher:
             pygame.display.flip()
 
             clock.tick(30)  # Limit to 30 FPS
-
         pygame.quit()
 
 
