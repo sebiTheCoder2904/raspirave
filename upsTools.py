@@ -1,5 +1,4 @@
 from INA219 import INA219
-from zmqTools import ZmqTools
 
 
 upsTopics = {
@@ -10,7 +9,6 @@ upsTopics = {
 class UpsTools:
     def __init__(self):
         self.ina219 = INA219(addr=0x43)
-        self.zt = ZmqTools()
         self.upsTopic = upsTopics
 
     def update(self):
