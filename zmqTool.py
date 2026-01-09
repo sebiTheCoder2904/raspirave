@@ -2,18 +2,24 @@ import zmq
 from time import sleep
 import json
 from spotifyTools import SpotifyTool
+from upsTools import UpsTools
 
 spotipyTopics = SpotifyTool().topic2function.keys()
 appTopics = {
     "/app/current": "draw_spotifyApp",
     "/app/showTopbar": "true",
-
-    }  
+    }
+upsTopics = UpsTools().upsTopic.keys()
 
 class ZmqTool:
     def __init__(self):
+        self.upsTopics = upsTopics
+        self.appTopics = appTopics
+        self.spotipyTopics = spotipyTopics
+
         self.last = {k: "none" for k in spotipyTopics}
         self.last.update(appTopics)
+        self.last.update({k: "none" for k in upsTopics})
 
 
 

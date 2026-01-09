@@ -14,5 +14,9 @@ class UpdateManager:
                 self.zt.publish_message("/spotipy/playback/trackname", "update")
                 self.zt.publish_message("/spotipy/playback/progress", "update")
                 self.zt.publish_message("/spotipy/playback/total_duration", "update")
-                sleep(2)
+
+            if self.showTopbar == "true":
+                self.zt.publish_message("/ups/voltage", "update")
+            
+            sleep(2)
 
