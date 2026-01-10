@@ -9,13 +9,13 @@ class INA219:
         return 50
 
     def getBusVoltage_V(self):
-        return 4
+        return 4.134
 
     def getCurrent_mA(self):
         return 200
 
     def getPower_W(self):
-        return 0.8
+        return 1.232
         
 if __name__=='__main__':
 
