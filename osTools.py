@@ -9,3 +9,7 @@ class OSTool:
     def get_current_time_string(self):
         from time import localtime, strftime
         return strftime("%H:%M:%S", localtime())
+
+    def get_current_time_string_HM(self):
+        from time import localtime, strftime
+        return strftime("%H:%M", localtime())

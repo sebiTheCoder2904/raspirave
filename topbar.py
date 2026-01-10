@@ -28,7 +28,7 @@ class TopBar:
         return img
 
     def update(self):
-        self.time_string = self.os_tool.get_current_time_string()
+        self.time_string = self.os_tool.get_current_time_string_HM()
         voltage = self.zt.listen_message("/ups/voltage")
         power = self.zt.listen_message("/ups/power")
 

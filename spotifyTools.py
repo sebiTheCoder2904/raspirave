@@ -171,5 +171,7 @@ class SpotifyTool:
                         result = function()
                         zmq_tool.publish_message(topic, str(result))
 
+            sleep(1)
+
             
 

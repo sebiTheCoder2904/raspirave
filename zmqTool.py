@@ -59,3 +59,5 @@ class ZmqTool:
                 self.last[topic] = message
                 rep.send_string("ok")
 
+            sleep(0.05)
+

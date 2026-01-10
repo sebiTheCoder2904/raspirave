@@ -1,4 +1,5 @@
 from INA219 import INA219
+from time import sleep
 
 
 upsTopics = {
@@ -23,6 +24,7 @@ class UpsTools:
                     if function:
                         result = function()
                         zmq_tool.publish_message(topic, str(result))
+            sleep(1)
 
     def get_voltage(self):
         voltage = str(round(self.ina219.getBusVoltage_V(), 2))
