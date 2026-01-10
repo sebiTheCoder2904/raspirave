@@ -17,6 +17,7 @@ class UpdateManager:
 
             if self.showTopbar == "true":
                 self.zt.publish_message("/ups/voltage", "update")
+                self.zt.publish_message("/ups/power", "update")
             
             sleep(2)
 

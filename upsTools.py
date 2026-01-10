@@ -3,6 +3,7 @@ from INA219 import INA219
 
 upsTopics = {
     "/ups/voltage": "get_voltage",
+    "/ups/power": "get_power",
     }
 
 
@@ -26,6 +27,10 @@ class UpsTools:
     def get_voltage(self):
         voltage = str(round(self.ina219.getBusVoltage_V(), 2)) + " V"
         return voltage
+
+    def get_power(self):
+        power = str(self.ina219.getPower_W()) + " W"
+        return power
 
 
 

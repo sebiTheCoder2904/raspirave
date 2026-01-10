@@ -8,6 +8,7 @@ class TopBar:
         self.oled_height = 64
         self.font = ImageFont.truetype("assets/W95FA.otf", 14)
         self.voltage = "idk V"  # Example voltage value
+        self.power = "idk W"    # Example power value
         
         from osTools import OSTool
         self.os_tool = OSTool()
@@ -21,15 +22,22 @@ class TopBar:
         self.update()
 
         draw.rounded_rectangle(xy=[0, -20, 127, 12], fill=0, width=1, radius=7, outline="white")
-        draw.text((self.oled_width-2, 0), self.voltage, font=self.font, fill=1, anchor="rt")
-        draw.text((2, 0), self.time_string, font=self.font, fill=1, anchor="lt")
+        draw.text((self.oled_width-3, 0), f"{self.power} | {self.voltage}", font=self.font, fill=1, anchor="rt")
+        draw.text((3, 0), self.time_string, font=self.font, fill=1, anchor="lt")
 
         return img
 
     def update(self):
         self.time_string = self.os_tool.get_current_time_string()
         voltage = self.zt.listen_message("/ups/voltage")
+        power = self.zt.listen_message("/ups/power")
+
         if voltage == "none" or voltage == "update":
             pass
         else:
             self.voltage = voltage
+
+        if power == "none" or power == "update":
+            pass
+        else:
+            self.power = power
