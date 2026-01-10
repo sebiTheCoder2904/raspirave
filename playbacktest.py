@@ -15,8 +15,5 @@ print(str(st.get_current_track_duration()) + " seconds is the total duration.")
 print("Artist Name: " + str(st.get_current_playback_artistname()))
 print("Track Name: " + str(st.get_current_playback_trackname()))
 
-st.toggle_playback()
-sleep(1)
-st.toggle_playback()
-
+print(st.sp.current_playback())
 print("Playback test completed.")

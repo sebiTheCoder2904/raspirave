@@ -6,7 +6,7 @@ from upsTools import UpsTools
 
 spotipyTopics = SpotifyTool().topic2function.keys()
 appTopics = {
-    "/app/current": "draw_spotifyApp",
+    "/app/current": "draw_current_time",
     "/app/showTopbar": "true",
     }
 upsTopics = UpsTools().upsTopic.keys()
