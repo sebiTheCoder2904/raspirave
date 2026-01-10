@@ -25,11 +25,11 @@ class UpsTools:
                         zmq_tool.publish_message(topic, str(result))
 
     def get_voltage(self):
-        voltage = str(round(self.ina219.getBusVoltage_V(), 2)) + " V"
+        voltage = str(round(self.ina219.getBusVoltage_V(), 2))
         return voltage
 
     def get_power(self):
-        power = str(round(self.ina219.getPower_W(), 2)) + " W"
+        power = str(round(self.ina219.getPower_W(), 2))
         return power
 
 
