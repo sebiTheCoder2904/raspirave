@@ -29,8 +29,8 @@ class UpsTools:
         return voltage
 
     def get_power(self):
-        power = str(self.ina219.getPower_W()) + " W"
-        return power
+        power = str(round(self.ina219.getPower_W(), 2)) + " W"
+        return 
 
 
 
